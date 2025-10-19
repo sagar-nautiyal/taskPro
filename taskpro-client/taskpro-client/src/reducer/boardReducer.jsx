@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { API_ENDPOINTS } from "../config/api.js";
 
 const INITIAL_STATE = {
   boards: [],
@@ -12,7 +13,7 @@ export const createBoard = createAsyncThunk(
   async (title, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:5000/api/board", {
+      const res = await fetch(API_ENDPOINTS.BOARD.BASE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,7 +39,7 @@ export const getBoardById = createAsyncThunk(
   async (boardId, { rejectWithValue }) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`http://localhost:5000/api/board/${boardId}`, {
+      const res = await fetch(API_ENDPOINTS.BOARD.GET_BY_ID(boardId), {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ export const fetchBoards = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:5000/api/board", {
+      const res = await fetch(API_ENDPOINTS.BOARD.BASE, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,7 +84,7 @@ export const moveTask = createAsyncThunk(
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/board/${boardId}/move`,
+        API_ENDPOINTS.BOARD.MOVE_TASK(boardId),
         {
           method: "PUT",
           headers: {

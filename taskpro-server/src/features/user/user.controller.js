@@ -69,6 +69,11 @@ export default class UserController {
           .json({ message: "Email and password are required" });
       }
 
+      if (!process.env.JWT_ACCESS_SECRET) {
+        console.error("JWT_ACCESS_SECRET not configured");
+        return res.status(500).json({ message: "Server configuration error" });
+      }
+
       // For development without MongoDB, create a mock login
       // if (!mongoose.connection.readyState) {
       //   console.log("No database connection - returning mock login for development");

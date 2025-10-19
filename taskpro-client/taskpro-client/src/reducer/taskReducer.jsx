@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { act } from "react";
 import { toast } from "react-toastify";
+import { API_ENDPOINTS } from "../config/api.js";
 
 const INITIAL_STATE = {
   tasks: [],
@@ -17,7 +18,7 @@ export const addTaskThunk = createAsyncThunk(
     }
     console.log("Payload Data", payload);
     try {
-      const response = await fetch("http://localhost:5000/api/task", {
+      const response = await fetch(API_ENDPOINTS.TASK.BASE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export const fetchTasksThunk = createAsyncThunk(
       return rejectWithValue("No token found");
     }
     try {
-      const response = await fetch("http://localhost:5000/api/task", {
+      const response = await fetch(API_ENDPOINTS.TASK.BASE, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

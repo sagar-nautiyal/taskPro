@@ -129,6 +129,25 @@ For production, use MongoDB Atlas:
 DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/taskpro
 ```
 
+**⚠️ SECURITY WARNING:**
+- Never commit `.env` files to version control
+- Use strong, randomly generated secrets (64+ characters)
+- Generate secure secrets using: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
+- For production, use environment variables or secure secret management services
+
+Create a `.env` file in the `taskpro-client/taskpro-client` directory:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000
+VITE_SOCKET_URL=http://localhost:5000
+```
+
+For production:
+```env
+VITE_API_BASE_URL=https://your-api-domain.com
+VITE_SOCKET_URL=https://your-api-domain.com
+```
+
 ## 📖 API Documentation
 
 ### Authentication Endpoints

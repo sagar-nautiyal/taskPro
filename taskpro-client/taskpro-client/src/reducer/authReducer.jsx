@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { API_ENDPOINTS } from "../config/api.js";
 
 // Check if user is already authenticated from localStorage
 const getInitialState = () => {
@@ -19,9 +20,9 @@ export const registerThunk = createAsyncThunk(
     try {
       console.log(
         "Making registration request to:",
-        "http://localhost:5000/api/user/register"
+        API_ENDPOINTS.AUTH.REGISTER
       );
-      const res = await fetch("http://localhost:5000/api/user/register", {
+      const res = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,7 @@ export const loginthunk = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:5000/api/user/login", {
+      const res = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
