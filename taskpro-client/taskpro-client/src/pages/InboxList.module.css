@@ -1,0 +1,7 @@
+.card {
+  position: relative;
+}
+.buttonBody {
+  position: absolute;
+  right: 0px;
+}
