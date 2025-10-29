@@ -8,8 +8,6 @@ export default class TaskController {
   async getAllTasks(req, res) {
     try {
       const userId = req.userId;
-      console.log("User Id:", userId);
-
       const allTasks = await this.taskRepository.get(userId);
       if (!allTasks) {
         return res
@@ -28,8 +26,6 @@ export default class TaskController {
     try {
       const userId = req.userId;
       const { title, description, boardId } = req.body;
-      console.log("body", req.body);
-      console.log("User:", userId);
       const newTask = await this.taskRepository.addTask({
         userId,
         title,
@@ -38,7 +34,6 @@ export default class TaskController {
       });
       return res.status(201).json({ tasks: newTask });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -51,7 +46,6 @@ export default class TaskController {
         .status(201)
         .json({ message: "Updated Task", task: updatedTask });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -62,7 +56,6 @@ export default class TaskController {
       await this.taskRepository.delete(taskId);
       return res.status(200).json({ message: "Deleted Task" });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }

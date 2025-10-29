@@ -7,7 +7,6 @@ export default class BoardController {
   }
   async createBoard(req, res) {
     try {
-      console.log("Owner", req.userId);
       const { title } = req.body;
       const owner = req.userId;
       
@@ -19,7 +18,6 @@ export default class BoardController {
       if (creatorUser && creatorUser.role === 'admin') {
         const allUsers = await User.find({}).select('_id');
         members = allUsers.map(user => user._id);
-        console.log("Admin creating board - adding all users as members:", members.length);
       }
 
       const defaultTasks = [
@@ -36,7 +34,6 @@ export default class BoardController {
       });
       return res.status(201).json({ newBoard });
     } catch (err) {
-      console.log(err.message);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -51,7 +48,6 @@ export default class BoardController {
 
       return res.status(200).json(boards);
     } catch (err) {
-      console.log(err.message);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -65,7 +61,6 @@ export default class BoardController {
       }
       return res.status(200).json({ boards });
     } catch (err) {
-      console.log(err.message);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -76,7 +71,6 @@ export default class BoardController {
       const updatedBoard = await this.boardRepository.update(boardId, req.body);
       return res.status(201).json(updatedBoard);
     } catch (err) {
-      console.log(err.message);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -85,14 +79,6 @@ export default class BoardController {
     try {
       const boardId = req.params.boardId;
       const { taskId, fromList, toList, insertAt } = req.body;
-      console.log("Move task request:", {
-        boardId,
-        taskId,
-        fromList,
-        toList,
-        insertAt
-      });
-      
       const updatedBoard = await this.boardRepository.move(
         boardId,
         taskId,
@@ -102,29 +88,15 @@ export default class BoardController {
       );
 
       if (typeof updatedBoard === 'string') {
-        console.log("Move task failed:", updatedBoard);
         return res.status(400).json({ error: updatedBoard });
       }
 
       const io = req.app.get("io");
-      console.log("🔌 IO instance:", !!io);
-      console.log("🚀 Emitting socket event to board room:", boardId);
-      console.log("📦 Emitting board data:", {
-        boardId: updatedBoard._id,
-        title: updatedBoard.title,
-        listsCount: updatedBoard.lists?.length,
-        totalTasks: updatedBoard.lists?.reduce((sum, list) => sum + (list.tasks?.length || 0), 0)
-      });
-      
       io.to(boardId).emit("taskMoved", updatedBoard);
 
       const rooms = io.sockets.adapter.rooms;
-      console.log("🏠 All rooms:", Array.from(rooms.keys()));
-      console.log("👥 Sockets in board room:", rooms.get(boardId) ? Array.from(rooms.get(boardId)) : "No sockets in room");
-      
       return res.status(201).json(updatedBoard);
     } catch (err) {
-      console.log(err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -135,7 +107,6 @@ export default class BoardController {
       await this.boardRepository.delete(boardId);
       return res.status(200).json({ message: "Board Deleted Successfully" });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   }

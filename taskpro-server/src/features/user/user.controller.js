@@ -13,7 +13,6 @@ export default class UserController {
 
   async registerUser(req, res) {
     try {
-      console.log("Registration request received:", req.body);
       const { name, email, password, role } = req.body;
 
       if (!name || !email || !password) {
@@ -24,9 +23,6 @@ export default class UserController {
 
       // For development without MongoDB, create a mock user response
       if (!mongoose.connection.readyState) {
-        console.log(
-          "No database connection - returning mock success for development"
-        );
         const mockUser = {
           _id: "dev-user-" + Date.now(),
           name,
@@ -34,7 +30,6 @@ export default class UserController {
           role: role || "user",
           createdAt: new Date(),
         };
-        console.log("Mock user created:", mockUser._id);
         return res.status(201).json({
           message: "User created successfully (development mode)",
           newUser: mockUser,
@@ -48,10 +43,8 @@ export default class UserController {
         password: hashedPassword,
         role: role || "user",
       });
-      console.log("User created successfully:", newUser._id);
       res.status(201).json({ message: "user Created successfully", newUser });
     } catch (err) {
-      console.error("Registration error:", err.message);
       res
         .status(500)
         .json({ message: "Failed to register user", error: err.message });
@@ -60,7 +53,6 @@ export default class UserController {
 
   async signIn(req, res) {
     try {
-      console.log("Login request received:", req.body);
       const { email, password } = req.body;
 
       if (!email || !password) {
@@ -70,7 +62,6 @@ export default class UserController {
       }
 
       if (!process.env.JWT_ACCESS_SECRET) {
-        console.error("JWT_ACCESS_SECRET not configured");
         return res.status(500).json({ message: "Server configuration error" });
       }
 
@@ -107,11 +98,8 @@ export default class UserController {
           expiresIn: "1h",
         }
       );
-
-      console.log("Login successful for user:", user.email);
       return res.status(200).json({ message: "Welcome to taskPro", token });
     } catch (err) {
-      console.error("Login error:", err.message);
       res.status(500).json({ message: "Failed to login", error: err.message });
     }
   }

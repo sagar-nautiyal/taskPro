@@ -1,32 +1,33 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { registerThunk } from "../reducer/authReducer";
 import { toast } from "react-toastify";
+import { loginthunk } from "../reducer/authReducer";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function RegisterPage() {
+export const SimpleLoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async (e) => {
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    const formData = new FormData(e.target);
-    const userData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      role: formData.get("role"),
-    };
-
     try {
-      const result = await dispatch(registerThunk(userData)).unwrap();
-      toast.success("Registration successful! Please login.");
-      navigate("/login");
-    } catch (err) {
-      toast.error(`Registration failed: ${err}`);
+      const result = await dispatch(loginthunk(formData)).unwrap();
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Login failed: " + (error.message || "Please try again"));
     } finally {
       setLoading(false);
     }
@@ -43,24 +44,10 @@ export default function RegisterPage() {
       <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>TaskPro</h1>
-          <p className="text-muted">Create your account</p>
+          <p className="text-muted">Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleRegister}>
-          <div className="mb-3">
-            <label htmlFor="name" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-              className="input"
-              required
-            />
-          </div>
-
+        <form id="loginForm" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
               Email
@@ -69,13 +56,14 @@ export default function RegisterPage() {
               id="email"
               type="email"
               name="email"
-              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
               className="input"
               required
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-4">
             <label htmlFor="password" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
               Password
             </label>
@@ -83,26 +71,11 @@ export default function RegisterPage() {
               id="password"
               type="password"
               name="password"
-              placeholder="Create a password"
+              value={formData.password}
+              onChange={handleInputChange}
               className="input"
               required
-              minLength={6}
             />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="role" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
-              Role
-            </label>
-            <select 
-              id="role" 
-              name="role" 
-              className="input"
-              defaultValue="user"
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
 
           <button 
@@ -111,19 +84,19 @@ export default function RegisterPage() {
             style={{ width: '100%', marginBottom: '1rem' }}
             disabled={loading}
           >
-            {loading ? 'Creating account...' : 'Sign Up'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
         <div className="text-center">
           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-            Already have an account?{" "}
-            <Link to="/login" style={{ color: 'var(--primary)' }}>
-              Sign in
+            Don't have an account?{" "}
+            <Link to="/register" style={{ color: 'var(--primary)' }}>
+              Sign up
             </Link>
           </p>
         </div>
       </div>
     </div>
   );
-}
+};

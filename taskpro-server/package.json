@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "seed": "node src/seeders/runSeeder.js seed",
+    "seed:clear": "node src/seeders/runSeeder.js clear",
+    "seed:reset": "node src/seeders/runSeeder.js reset",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sagar Nautiyal",

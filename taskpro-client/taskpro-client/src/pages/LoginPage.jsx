@@ -19,7 +19,6 @@ export const LoginPage = () => {
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
-      console.log(err.message);
       toast.error("An error occurred while logging in.");
       return;
     }

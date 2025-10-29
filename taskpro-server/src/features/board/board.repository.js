@@ -33,54 +33,72 @@ export default class BoardRepository {
   }
 
   async move(boardId, taskId, fromList, toList, insertAt) {
-    console.log("Repository move called with:", { boardId, taskId, fromList, toList, insertAt });
-    
     const board = await Board.findById(boardId);
     if (!board) {
-      console.log("Board not found:", boardId);
       return "Board Not Found";
     }
-
-    console.log("Board found:", board.title);
-    console.log("Board lists:", board.lists.map(l => ({ title: l.title, taskCount: l.tasks.length })));
-
-    const sourceList = board.lists.find((list) => list.title === fromList);
-    const destinationList = board.lists.find((list) => list.title === toList);
-
-    if (!sourceList) {
-      console.log("Source list not found:", fromList);
-      console.log("Available lists:", board.lists.map(l => l.title));
-      return "Source list not found";
+    // Verify the task belongs to this board
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return "Task not found";
+    }
+    // If task has no boardId OR belongs to different board, update it to current board
+    if (!task.boardId) {
+      await Task.findByIdAndUpdate(taskId, { boardId: boardId });
+    } else if (task.boardId.toString() !== boardId) {
+      // Update the task's boardId to match the current board
+      await Task.findByIdAndUpdate(taskId, { boardId: boardId });
     }
 
+    const destinationList = board.lists.find((list) => list.title === toList);
     if (!destinationList) {
-      console.log("Destination list not found:", toList);
       return "Destination list not found";
     }
 
-    console.log("Source list tasks:", sourceList.tasks.map(t => t.toString()));
-    console.log("Looking for task:", taskId);
-
-    //find and delete the task from source - convert ObjectIds to strings for comparison
-    const taskIndexFromList = sourceList.tasks.findIndex(task => task.toString() === taskId);
-    if (taskIndexFromList === -1) {
-      console.log("Task not found in source list. Looking for:", taskId);
-      console.log("Available tasks:", sourceList.tasks.map(t => t.toString()));
-      return "No task found";
+    // First, try to find the task in the specified source list
+    let sourceList = board.lists.find((list) => list.title === fromList);
+    let taskIndexFromList = -1;
+    
+    if (sourceList) {
+      taskIndexFromList = sourceList.tasks.findIndex(task => task.toString() === taskId);
     }
 
-    //delete the task
-    const [removedTask] = sourceList.tasks.splice(taskIndexFromList, 1);
-    console.log("removed Task is:", removedTask);
+    // If task not found in specified source list, search all lists (data inconsistency fix)
+    if (taskIndexFromList === -1) {
+      for (const list of board.lists) {
+        const idx = list.tasks.findIndex(task => task.toString() === taskId);
+        if (idx !== -1) {
+          sourceList = list;
+          taskIndexFromList = idx;
+          break;
+        }
+      }
 
+      // If still not found, this is a task that exists but isn't in any list yet
+      // Just add it to the destination list (data recovery)
+      if (taskIndexFromList === -1) {
+        // Add the task to the destination list
+        destinationList.tasks.splice(insertAt, 0, taskId);
+        
+        // Update task status
+        await Task.findByIdAndUpdate(taskId, { status: toList });
+        
+        await board.save();
+        const populatedBoard = await Board.findById(boardId).populate("lists.tasks");
+        return populatedBoard;
+      }
+    }
+    //delete the task from source
+    const [removedTask] = sourceList.tasks.splice(taskIndexFromList, 1);
     //insert the task to destination
     destinationList.tasks.splice(insertAt, 0, removedTask);
+    // Update task status in Task collection
     await Task.findByIdAndUpdate(taskId, { status: toList });
 
-    const updatedBoard = await board.save();
+    await board.save();
+    
     // Return the populated board for real-time updates
     const populatedBoard = await Board.findById(boardId).populate("lists.tasks");
-    console.log("Move completed successfully");
     return populatedBoard;
   }
 

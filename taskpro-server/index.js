@@ -7,6 +7,7 @@ import taskRoute from "./src/features/tasks/task.route.js";
 import boardRoute from "./src/features/board/board.routes.js";
 import { auth } from "./src/middlewares/auth.js";
 import { Server } from "socket.io";
+import { seedDatabase } from "./src/seeders/dataSeed.js";
 const app = express();
 
 const server = http.createServer(app);
@@ -52,28 +53,22 @@ app.use("/api/task", auth, taskRoute);
 app.use("/api/board", auth, boardRoute);
 
 io.on("connection", (socket) => {
-  console.log(
-    "🔌 Client Connected",
-    socket.id,
-    "origin:",
-    socket.handshake.headers?.origin
-  );
-
   socket.on("joinBoard", (boardId) => {
-    console.log("📡 Received joinBoard:", boardId, "from socket:", socket.id);
     socket.join(boardId);
-    console.log(`✅ Socket ${socket.id} joined board room ${boardId}`);
-
     const room = io.sockets.adapter.rooms.get(boardId);
-    console.log("👥 Sockets in board room:", room ? Array.from(room) : "No sockets");
   });
   
   socket.on("disconnect", () => {
-    console.log("🔌 Client Disconnected:", socket.id);
   });
 });
 
-server.listen(5000, () => {
-  console.log("Server is listening at port 5000");
-  connecToDB();
+const PORT = process.env.PORT || 3001;
+
+server.listen(PORT, async () => {
+  try {
+    await connecToDB();
+    // TODO: Fix seeder and re-enable
+    // await seedDatabase();
+  } catch (error) {
+  }
 });

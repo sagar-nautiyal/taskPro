@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../config/api.js";
+import { logOut } from "./authReducer.jsx";
 
 const INITIAL_STATE = {
   boards: [],
@@ -21,6 +22,11 @@ export const createBoard = createAsyncThunk(
         },
         body: JSON.stringify({ title }),
       });
+      if (res.status === 401) {
+        dispatch(logOut());
+        return rejectWithValue("Unauthorized");
+      }
+
       if (!res.ok) return rejectWithValue("failed to create board");
       const data = await res.json();
       //dipatch to fetch the board immediately
@@ -28,7 +34,6 @@ export const createBoard = createAsyncThunk(
       dispatch(getBoardById(data.newBoard._id));
       return data.newBoard;
     } catch (err) {
-      console.log("error from reducer", err);
       return rejectWithValue(err.message);
     }
   }
@@ -36,7 +41,7 @@ export const createBoard = createAsyncThunk(
 
 export const getBoardById = createAsyncThunk(
   "board/getBoard",
-  async (boardId, { rejectWithValue }) => {
+  async (boardId, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(API_ENDPOINTS.BOARD.GET_BY_ID(boardId), {
@@ -45,12 +50,16 @@ export const getBoardById = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      if (res.status === 401) {
+        dispatch(logOut());
+        return rejectWithValue("Unauthorized");
+      }
+
       if (!res.ok) return rejectWithValue("failed to create board");
       const data = await res.json();
 
       return data.boards;
     } catch (err) {
-      console.log("error from reducer", err);
       return rejectWithValue(err.message);
     }
   }
@@ -58,7 +67,7 @@ export const getBoardById = createAsyncThunk(
 
 export const fetchBoards = createAsyncThunk(
   "board/fetch",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(API_ENDPOINTS.BOARD.BASE, {
@@ -66,6 +75,11 @@ export const fetchBoards = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 401) {
+        dispatch(logOut());
+        return rejectWithValue("Unauthorized");
+      }
 
       if (!res.ok) {
         return rejectWithValue("Failed", res.status);
@@ -80,7 +94,7 @@ export const fetchBoards = createAsyncThunk(
 
 export const moveTask = createAsyncThunk(
   "board/moveTask",
-  async ({ boardId, taskId, fromList, toList, insertAt }, rejectWithValue) => {
+  async ({ boardId, taskId, fromList, toList, insertAt }, { rejectWithValue, dispatch }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
@@ -99,18 +113,18 @@ export const moveTask = createAsyncThunk(
           }),
         }
       );
-
-      console.log("response from server", res);
+      if (res.status === 401) {
+        dispatch(logOut());
+        return rejectWithValue("Unauthorized");
+      }
 
       if (!res.ok) {
         throw new Error("Failed to move task");
       }
 
       const updatedBoard = await res.json();
-      console.log("Updated Board", updatedBoard);
       return updatedBoard;
     } catch (err) {
-      console.log("error while moving", err);
       return rejectWithValue(err.message);
     }
   }
@@ -179,10 +193,8 @@ const boardSlice = createSlice({
     builder
       .addCase(moveTask.fulfilled, (state, action) => {
         state.currentBoard = action.payload;
-        console.log("Move task fulfilled, updated board:", action.payload);
       })
       .addCase(moveTask.rejected, (state, action) => {
-        console.error("Move task failed:", action.payload);
       });
   },
 });

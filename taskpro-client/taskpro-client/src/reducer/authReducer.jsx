@@ -18,10 +18,6 @@ export const registerThunk = createAsyncThunk(
   "auth/Register",
   async (userData, { rejectWithValue }) => {
     try {
-      console.log(
-        "Making registration request to:",
-        API_ENDPOINTS.AUTH.REGISTER
-      );
       const res = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
         method: "POST",
         headers: {
@@ -29,20 +25,14 @@ export const registerThunk = createAsyncThunk(
         },
         body: JSON.stringify(userData),
       });
-
-      console.log("Registration response status:", res.status);
-
       if (!res.ok) {
         const errorData = await res.text();
-        console.log("Registration error response:", errorData);
         throw new Error(`Registration failed: ${res.status} ${errorData}`);
       }
 
       const data = await res.json();
-      console.log("Registration success data:", data);
       return data;
     } catch (err) {
-      console.error("Registration fetch error:", err);
       return rejectWithValue(err.message);
     }
   }
