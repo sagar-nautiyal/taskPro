@@ -1,6 +1,6 @@
 const { io } = require("socket.io-client");
 
-const url = process.env.SOCKET_URL || "http://localhost:5000";
+const url = process.env.SOCKET_URL || "http://13.60.50.193:3001";
 const s = io(url, {
   transports: ["websocket", "polling"],
   path: "/socket.io",
