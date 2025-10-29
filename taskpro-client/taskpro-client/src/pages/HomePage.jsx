@@ -100,7 +100,7 @@ export const HomePage = () => {
   // Filter tasks by current board first, then by search term
   const boardTasks = currentBoard
     ? tasks.filter((task) => task.boardId === currentBoard._id)
-    : tasks;
+    : []; // Show empty array when no board is selected (All Tasks mode)
 
   // Filter tasks based on search term
   const filteredTasks = debouncedSearchTerm.trim()
@@ -720,7 +720,9 @@ export const HomePage = () => {
                         margin: 0,
                       }}
                     >
-                      {debouncedSearchTerm
+                      {!currentBoard
+                        ? "Select a board to view tasks"
+                        : debouncedSearchTerm
                         ? `No tasks found matching "${debouncedSearchTerm}"`
                         : "No tasks yet"}
                     </p>
