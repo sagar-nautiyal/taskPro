@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 3001;
 
-server.listen(PORT, async () => {
+server.listen(PORT, "0.0.0.0", async () => {
   try {
     await connecToDB();
     // TODO: Fix seeder and re-enable
