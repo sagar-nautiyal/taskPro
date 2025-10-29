@@ -8,16 +8,10 @@ const socket = io(API_ENDPOINTS.SOCKET_URL, {
 });
 
 // Add connection event listeners for debugging
-socket.on("connect", () => {
+socket.on("connect", () => {});
 
-});
+socket.on("disconnect", () => {});
 
-socket.on("disconnect", () => {
-
-});
-
-socket.on("connect_error", (error) => {
-
-});
+socket.on("connect_error", (error) => {});
 
 export default socket;

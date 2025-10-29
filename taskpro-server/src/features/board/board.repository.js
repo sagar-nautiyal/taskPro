@@ -15,11 +15,8 @@ export default class BoardRepository {
 
   async getBoard(userId) {
     // Find boards where user is either owner OR member
-    const board = await Board.find({ 
-      $or: [
-        { owner: userId },
-        { members: userId }
-      ]
+    const board = await Board.find({
+      $or: [{ owner: userId }, { members: userId }],
     }).populate("lists.tasks");
     return board;
   }
@@ -58,15 +55,17 @@ export default class BoardRepository {
     // First, try to find the task in the specified source list
     let sourceList = board.lists.find((list) => list.title === fromList);
     let taskIndexFromList = -1;
-    
+
     if (sourceList) {
-      taskIndexFromList = sourceList.tasks.findIndex(task => task.toString() === taskId);
+      taskIndexFromList = sourceList.tasks.findIndex(
+        (task) => task.toString() === taskId
+      );
     }
 
     // If task not found in specified source list, search all lists (data inconsistency fix)
     if (taskIndexFromList === -1) {
       for (const list of board.lists) {
-        const idx = list.tasks.findIndex(task => task.toString() === taskId);
+        const idx = list.tasks.findIndex((task) => task.toString() === taskId);
         if (idx !== -1) {
           sourceList = list;
           taskIndexFromList = idx;
@@ -79,12 +78,14 @@ export default class BoardRepository {
       if (taskIndexFromList === -1) {
         // Add the task to the destination list
         destinationList.tasks.splice(insertAt, 0, taskId);
-        
+
         // Update task status
         await Task.findByIdAndUpdate(taskId, { status: toList });
-        
+
         await board.save();
-        const populatedBoard = await Board.findById(boardId).populate("lists.tasks");
+        const populatedBoard = await Board.findById(boardId).populate(
+          "lists.tasks"
+        );
         return populatedBoard;
       }
     }
@@ -96,9 +97,11 @@ export default class BoardRepository {
     await Task.findByIdAndUpdate(taskId, { status: toList });
 
     await board.save();
-    
+
     // Return the populated board for real-time updates
-    const populatedBoard = await Board.findById(boardId).populate("lists.tasks");
+    const populatedBoard = await Board.findById(boardId).populate(
+      "lists.tasks"
+    );
     return populatedBoard;
   }
 

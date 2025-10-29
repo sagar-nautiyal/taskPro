@@ -45,16 +45,22 @@ export default class TaskRepository {
       const board = await Board.findById(currentTask.boardId);
       if (board) {
         // Find and remove from old list
-        const oldList = board.lists.find(list => list.title === currentTask.status);
+        const oldList = board.lists.find(
+          (list) => list.title === currentTask.status
+        );
         if (oldList) {
-          const taskIndex = oldList.tasks.findIndex(t => t.toString() === taskId);
+          const taskIndex = oldList.tasks.findIndex(
+            (t) => t.toString() === taskId
+          );
           if (taskIndex !== -1) {
             oldList.tasks.splice(taskIndex, 1);
           }
         }
 
         // Add to new list
-        const newList = board.lists.find(list => list.title === taskData.status);
+        const newList = board.lists.find(
+          (list) => list.title === taskData.status
+        );
         if (newList) {
           newList.tasks.push(taskId);
         }
@@ -76,9 +82,9 @@ export default class TaskRepository {
     // Remove from board's list array
     const board = await Board.findById(task.boardId);
     if (board) {
-      const list = board.lists.find(l => l.title === task.status);
+      const list = board.lists.find((l) => l.title === task.status);
       if (list) {
-        const taskIndex = list.tasks.findIndex(t => t.toString() === taskId);
+        const taskIndex = list.tasks.findIndex((t) => t.toString() === taskId);
         if (taskIndex !== -1) {
           list.tasks.splice(taskIndex, 1);
           await board.save();

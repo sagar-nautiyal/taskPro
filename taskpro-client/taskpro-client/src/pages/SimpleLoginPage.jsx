@@ -34,22 +34,33 @@ export const SimpleLoginPage = () => {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: 'var(--bg-secondary)'
-    }}>
-      <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>TaskPro</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--bg-secondary)",
+      }}
+    >
+      <div className="card" style={{ maxWidth: "400px", width: "100%" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+            TaskPro
+          </h1>
           <p className="text-muted">Sign in to your account</p>
         </div>
 
         <form id="loginForm" onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="email"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Email
             </label>
             <input
@@ -64,7 +75,14 @@ export const SimpleLoginPage = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="password"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Password
             </label>
             <input
@@ -78,20 +96,20 @@ export const SimpleLoginPage = () => {
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            style={{ width: '100%', marginBottom: '1rem' }}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: "100%", marginBottom: "1rem" }}
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <div className="text-center">
-          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+          <p className="text-muted" style={{ fontSize: "0.875rem" }}>
             Don't have an account?{" "}
-            <Link to="/register" style={{ color: 'var(--primary)' }}>
+            <Link to="/register" style={{ color: "var(--primary)" }}>
               Sign up
             </Link>
           </p>

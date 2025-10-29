@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const formData = new FormData(e.target);
     const userData = {
       name: formData.get("name"),
@@ -33,22 +33,33 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      background: 'var(--bg-secondary)'
-    }}>
-      <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>TaskPro</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--bg-secondary)",
+      }}
+    >
+      <div className="card" style={{ maxWidth: "400px", width: "100%" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+            TaskPro
+          </h1>
           <p className="text-muted">Create your account</p>
         </div>
 
         <form onSubmit={handleRegister}>
           <div className="mb-3">
-            <label htmlFor="name" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="name"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Full Name
             </label>
             <input
@@ -62,7 +73,14 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="email"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Email
             </label>
             <input
@@ -76,7 +94,14 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="password"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Password
             </label>
             <input
@@ -91,34 +116,36 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="role" style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
+            <label
+              htmlFor="role"
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+              }}
+            >
               Role
             </label>
-            <select 
-              id="role" 
-              name="role" 
-              className="input"
-              defaultValue="user"
-            >
+            <select id="role" name="role" className="input" defaultValue="user">
               <option value="user">User</option>
               <option value="admin">Admin</option>
             </select>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            style={{ width: '100%', marginBottom: '1rem' }}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: "100%", marginBottom: "1rem" }}
             disabled={loading}
           >
-            {loading ? 'Creating account...' : 'Sign Up'}
+            {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 
         <div className="text-center">
-          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+          <p className="text-muted" style={{ fontSize: "0.875rem" }}>
             Already have an account?{" "}
-            <Link to="/login" style={{ color: 'var(--primary)' }}>
+            <Link to="/login" style={{ color: "var(--primary)" }}>
               Sign in
             </Link>
           </p>

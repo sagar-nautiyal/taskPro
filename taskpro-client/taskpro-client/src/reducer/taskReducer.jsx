@@ -172,7 +172,7 @@ const taskSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-    
+
     // Delete Task
     builder
       .addCase(deleteTaskThunk.pending, (state) => {
@@ -181,15 +181,15 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTaskThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = state.tasks.filter(task => task._id !== action.payload);
+        state.tasks = state.tasks.filter((task) => task._id !== action.payload);
         state.error = null;
       })
       .addCase(deleteTaskThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
-    
-    // Update Task  
+
+    // Update Task
     builder
       .addCase(updateTaskThunk.pending, (state) => {
         state.loading = true;
@@ -197,7 +197,9 @@ const taskSlice = createSlice({
       })
       .addCase(updateTaskThunk.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.tasks.findIndex(task => task._id === action.payload._id);
+        const index = state.tasks.findIndex(
+          (task) => task._id === action.payload._id
+        );
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }

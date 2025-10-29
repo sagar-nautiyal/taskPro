@@ -108,19 +108,19 @@
   .navbar-container {
     padding: var(--space-3) var(--space-4);
   }
-  
+
   .brand-text {
     display: none;
   }
-  
+
   .nav-link span {
     display: none;
   }
-  
+
   .user-name {
     display: none;
   }
-  
+
   .navbar-nav {
     gap: var(--space-2);
   }
@@ -294,7 +294,7 @@
 }
 
 .btn-loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -619,7 +619,7 @@
     width: 95%;
     margin: var(--space-4);
   }
-  
+
   .btn-xl {
     padding: var(--space-4) var(--space-6);
     font-size: var(--font-size-base);
@@ -632,7 +632,7 @@
   .card-footer {
     padding: var(--space-4);
   }
-  
+
   .modal-header,
   .modal-body,
   .modal-footer {
@@ -737,7 +737,7 @@
 }
 
 .list-column::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -978,7 +978,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

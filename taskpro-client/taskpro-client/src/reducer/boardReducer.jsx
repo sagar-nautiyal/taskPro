@@ -94,25 +94,25 @@ export const fetchBoards = createAsyncThunk(
 
 export const moveTask = createAsyncThunk(
   "board/moveTask",
-  async ({ boardId, taskId, fromList, toList, insertAt }, { rejectWithValue, dispatch }) => {
+  async (
+    { boardId, taskId, fromList, toList, insertAt },
+    { rejectWithValue, dispatch }
+  ) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(
-        API_ENDPOINTS.BOARD.MOVE_TASK(boardId),
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            taskId,
-            fromList,
-            toList,
-            insertAt,
-          }),
-        }
-      );
+      const res = await fetch(API_ENDPOINTS.BOARD.MOVE_TASK(boardId), {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          taskId,
+          fromList,
+          toList,
+          insertAt,
+        }),
+      });
       if (res.status === 401) {
         dispatch(logOut());
         return rejectWithValue("Unauthorized");
@@ -194,8 +194,7 @@ const boardSlice = createSlice({
       .addCase(moveTask.fulfilled, (state, action) => {
         state.currentBoard = action.payload;
       })
-      .addCase(moveTask.rejected, (state, action) => {
-      });
+      .addCase(moveTask.rejected, (state, action) => {});
   },
 });
 

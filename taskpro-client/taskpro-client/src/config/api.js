@@ -1,5 +1,6 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3001";
 
 export const API_ENDPOINTS = {
@@ -16,7 +17,7 @@ export const API_ENDPOINTS = {
   },
   TASK: {
     BASE: `${API_BASE_URL}/api/task`,
-  }
+  },
 };
 
 export default API_ENDPOINTS;

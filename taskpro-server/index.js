@@ -30,21 +30,21 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization", "x-requested-with"],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
 };
 
 app.use(cors(corsOptions));
 
 // Add a simple root route to confirm server is working
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'TaskPro API Server is running!', 
+app.get("/", (req, res) => {
+  res.json({
+    message: "TaskPro API Server is running!",
     endpoints: [
-      'POST /api/user/register',
-      'POST /api/user/login', 
-      'GET /api/board (requires auth)',
-      'POST /api/task (requires auth)'
-    ]
+      "POST /api/user/register",
+      "POST /api/user/login",
+      "GET /api/board (requires auth)",
+      "POST /api/task (requires auth)",
+    ],
   });
 });
 
@@ -57,9 +57,8 @@ io.on("connection", (socket) => {
     socket.join(boardId);
     const room = io.sockets.adapter.rooms.get(boardId);
   });
-  
-  socket.on("disconnect", () => {
-  });
+
+  socket.on("disconnect", () => {});
 });
 
 const PORT = process.env.PORT || 3001;
@@ -69,6 +68,5 @@ server.listen(PORT, async () => {
     await connecToDB();
     // TODO: Fix seeder and re-enable
     // await seedDatabase();
-  } catch (error) {
-  }
+  } catch (error) {}
 });
